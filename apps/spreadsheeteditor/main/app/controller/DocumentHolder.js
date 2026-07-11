@@ -479,9 +479,20 @@ define([
             if (!_.isUndefined(menu) && menu !== null && event){
                 Common.UI.Menu.Manager.hideAll();
 
+                // CEF OSR applies the reported device_scale_factor as an
+                // effective CSS zoom on the page (unlike normal windowed
+                // Chromium, where DPI only affects physical buffer
+                // resolution, not the CSS pixel grid). event.pageX/pageY are
+                // real DOM mouse-event coordinates, already consistent with
+                // that zoomed CSS-pixel grid -- confirmed empirically via
+                // live devtools inspection (a simulated click at X always
+                // rendered the menu at exactly X*devicePixelRatio when this
+                // multiplication was applied). Multiplying by
+                // Common.Utils.zoom() (which equals devicePixelRatio here)
+                // was actively wrong, not a missing compensation.
                 var me                  = this,
                     documentHolderView  = me.documentHolder,
-                    showPoint           = [event.pageX*Common.Utils.zoom() - Common.Utils.getOffset(documentHolderView.cmpEl).left, event.pageY*Common.Utils.zoom() - Common.Utils.getOffset(documentHolderView.cmpEl).top],
+                    showPoint           = [event.pageX - Common.Utils.getOffset(documentHolderView.cmpEl).left, event.pageY - Common.Utils.getOffset(documentHolderView.cmpEl).top],
                     menuContainer       = documentHolderView.cmpEl.find(Common.Utils.String.format('#menu-container-{0}', menu.id));
 
                 if (!menu.rendered) {
