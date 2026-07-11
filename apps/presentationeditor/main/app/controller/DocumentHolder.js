@@ -311,7 +311,16 @@ define([
             if (!_.isUndefined(menu) && menu !== null){
                 Common.UI.Menu.Manager.hideAll();
 
-                var showPoint = [event.get_X(), event.get_Y()],
+                // CEF OSR applies the reported device_scale_factor as an
+                // effective CSS zoom on the page (unlike normal windowed
+                // Chromium, where DPI only affects physical buffer
+                // resolution, not the CSS pixel grid). event.get_X()/Y() are
+                // computed by the engine in zoom-independent DIPs, so they
+                // must be scaled down to land at the correct on-screen
+                // position. Only applies to the desktop app -- browser usage
+                // has no such OSR quirk.
+                var _oemZoom = (window["AscDesktopEditor"] && window.devicePixelRatio > 1) ? window.devicePixelRatio : 1;
+                var showPoint = [event.get_X() / _oemZoom, event.get_Y() / _oemZoom],
                     menuContainer = $(me.documentHolder.el).find(Common.Utils.String.format('#menu-container-{0}', menu.id));
 
                 if (event.get_Type() == Asc.c_oAscContextMenuTypes.Thumbnails) {
