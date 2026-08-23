@@ -294,7 +294,9 @@ define([
             toolbar.btnRedo.on('click',                                 _.bind(this.onRedo, this));
             toolbar.btnRedo.on('disabled',                              _.bind(this.onBtnChangeState, this, 'redo:disabled'));
             toolbar.btnCopy.on('click',                                 _.bind(this.onCopyPaste, this, 'copy'));
+            toolbar.btnCopy.menu.on('item:click',                       _.bind(this.onCopyPasteMenu, this));
             toolbar.btnPaste.on('click',                                _.bind(this.onCopyPaste, this, 'paste'));
+            toolbar.btnPaste.menu.on('item:click',                      _.bind(this.onCopyPasteMenu, this));
             toolbar.btnCut.on('click',                                  _.bind(this.onCopyPaste, this, 'cut'));
             toolbar.btnSelectAll.on('click',                            _.bind(this.onSelectAll, this));
             toolbar.btnSelectTool.on('toggle',                          _.bind(this.onSelectTool, this, 'select'));
@@ -324,7 +326,9 @@ define([
             toolbar.btnRedo.on('click',                                 _.bind(this.onRedo, this));
             toolbar.btnRedo.on('disabled',                              _.bind(this.onBtnChangeState, this, 'redo:disabled'));
             toolbar.btnCopy.on('click',                                 _.bind(this.onCopyPaste, this, 'copy'));
+            toolbar.btnCopy.menu.on('item:click',                       _.bind(this.onCopyPasteMenu, this));
             toolbar.btnPaste.on('click',                                _.bind(this.onCopyPaste, this, 'paste'));
+            toolbar.btnPaste.menu.on('item:click',                      _.bind(this.onCopyPasteMenu, this));
             toolbar.btnCut.on('click',                                  _.bind(this.onCopyPaste, this, 'cut'));
             toolbar.btnSelectAll.on('click',                            _.bind(this.onSelectAll, this));
             toolbar.btnReplace.on('click',                              _.bind(this.onReplace, this));
@@ -1276,6 +1280,22 @@ define([
                     }
                 } else
                     Common.component.Analytics.trackEvent('ToolBar', 'Copy Warning');
+            }
+            Common.NotificationCenter.trigger('edit:complete', me.toolbar);
+        },
+
+        onCopyPasteMenu: function(menu, item) {
+            var me = this;
+            if (!me.api) return;
+
+            if ('copy-markdown' === item.value) {
+                me.api.asc_CopyAsMarkdown();
+            } else if ('paste-markdown' === item.value) {
+                if (window.navigator && window.navigator.clipboard && window.navigator.clipboard.readText) {
+                    window.navigator.clipboard.readText().then(function(sText) {
+                        me.api.asc_PasteFromMarkdown(sText);
+                    })['catch'](function() {});
+                }
             }
             Common.NotificationCenter.trigger('edit:complete', me.toolbar);
         },
