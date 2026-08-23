@@ -78,6 +78,7 @@
         <div class="padding-small">
             <div class="padding-small" id="id-autocorrect-dialog-chk-bulleted"></div>
             <div class="padding-small" id="id-autocorrect-dialog-chk-numbered"></div>
+            <div class="padding-small" id="id-autocorrect-dialog-chk-markdown"></div>
         </div>
     </div>
 </div>

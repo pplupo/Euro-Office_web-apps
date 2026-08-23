@@ -142,7 +142,9 @@ define([
                 /** coauthoring begin **/
                 'command+shift+h,ctrl+shift+h': _.bind(this.onShortcut, this, 'comments'),
                 /** coauthoring end **/
-                'f1': _.bind(this.onShortcut, this, 'help')
+                'f1': _.bind(this.onShortcut, this, 'help'),
+                'command+alt+m,ctrl+alt+m': _.bind(this.onShortcut, this, 'copyasmarkdown'),
+                'command+alt+shift+m,ctrl+alt+shift+m': _.bind(this.onShortcut, this, 'pasteasmarkdown')
             };
             keymap[Common.Utils.isMac ? 'ctrl+alt+f' : 'alt+f'] = _.bind(this.onShortcut, this, 'file');
             keymap[Common.Utils.isMac ? 'ctrl+alt+q' : 'alt+q'] = _.bind(this.onShortcut, this, 'chat');
@@ -372,6 +374,14 @@ define([
         clickSaveAsFormat: function(menu, format, ext, wopiPath) { // ext isn't undefined for save copy as
             var me = this,
                 fileType = this.getApplication().getController('Main').document.fileType;
+
+            // Markdown export doesn't go through the server/x2t conversion pipeline (x2t has no MD
+            // format) - it's generated client-side from the document model, see asc_SaveAsMarkdown
+            if (format === Asc.c_oAscFileType.MD) {
+                this.api.asc_SaveAsMarkdown();
+                menu && menu.hide();
+                return;
+            }
 
             if ( /^pdf|xps|oxps|djvu$/.test(fileType)) {
                 if (format===undefined) {
@@ -836,6 +846,17 @@ define([
             if (!this.mode) return;
 
             switch (s) {
+                case 'copyasmarkdown':
+                    this.api && this.api.asc_CopyAsMarkdown();
+                    return false;
+                case 'pasteasmarkdown':
+                    if (this.api && window.navigator && window.navigator.clipboard && window.navigator.clipboard.readText) {
+                        var me = this;
+                        window.navigator.clipboard.readText().then(function(sText) {
+                            me.api.asc_PasteFromMarkdown(sText);
+                        })['catch'](function() {});
+                    }
+                    return false;
                 case 'replace':
                 case 'search':
                     this.leftMenu.btnAbout.toggle(false);
