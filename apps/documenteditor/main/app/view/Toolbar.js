@@ -256,6 +256,12 @@ define([
                         cls: 'btn-toolbar',
                         iconCls: 'toolbar__icon btn-copy',
                         lock: [_set.copyLock, _set.previewReviewMode, _set.viewFormMode, _set.lostConnect, _set.disableOnStart],
+                        split: true,
+                        menu: new Common.UI.Menu({
+                            items: [
+                                {caption: this.textCopyAsMarkdown, value: 'copy-markdown'}
+                            ]
+                        }),
                         dataHint: '1',
                         dataHintDirection: 'top',
                         dataHintTitle: 'C'
@@ -271,6 +277,12 @@ define([
                         cls: 'btn-toolbar',
                         iconCls: 'toolbar__icon btn-paste',
                         lock: [_set.paragraphLock, _set.headerLock, _set.richEditLock, _set.plainEditLock, _set.previewReviewMode, _set.viewFormMode, _set.lostConnect, _set.disableOnStart, _set.docLockViewIns, _set.docLockCommentsIns, _set.viewMode],
+                        split: true,
+                        menu: new Common.UI.Menu({
+                            items: [
+                                {caption: this.textPasteAsMarkdown, value: 'paste-markdown'}
+                            ]
+                        }),
                         dataHint: '1',
                         dataHintDirection: 'top',
                         dataHintTitle: 'V'
@@ -1977,6 +1989,12 @@ define([
                             cls: 'btn-toolbar',
                             iconCls: 'toolbar__icon btn-copy',
                             lock: [_set.copyLock, _set.previewReviewMode, _set.viewFormMode, _set.lostConnect, _set.disableOnStart],
+                            split: true,
+                            menu: new Common.UI.Menu({
+                                items: [
+                                    {caption: this.textCopyAsMarkdown, value: 'copy-markdown'}
+                                ]
+                            }),
                             dataHint: '1',
                             dataHintDirection: 'top',
                             dataHintTitle: 'C'
@@ -1992,6 +2010,12 @@ define([
                             cls: 'btn-toolbar',
                             iconCls: 'toolbar__icon btn-paste',
                             lock: [_set.paragraphLock, _set.headerLock, _set.richEditLock, _set.plainEditLock, _set.previewReviewMode, _set.viewFormMode, _set.lostConnect, _set.disableOnStart, _set.docLockView, _set.docLockComments, _set.viewMode],
+                            split: true,
+                            menu: new Common.UI.Menu({
+                                items: [
+                                    {caption: this.textPasteAsMarkdown, value: 'paste-markdown'}
+                                ]
+                            }),
                             dataHint: '1',
                             dataHintDirection: 'top',
                             dataHintTitle: 'V'

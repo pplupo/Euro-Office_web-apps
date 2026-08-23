@@ -318,6 +318,20 @@ define([
                     me.api.asc_SetAutoCorrectDoubleSpaceWithPeriod(checked);
                 });
 
+                // Markdown live-typing (headings "# ", bold "*text*") - Document Editor only
+                if (this.appPrefix == 'de-') {
+                    this.chMarkdown = new Common.UI.CheckBox({
+                        el: $window.find('#id-autocorrect-dialog-chk-markdown'),
+                        labelText: this.textMarkdown,
+                        value: Common.Utils.InternalSettings.get(this.appPrefix + "settings-autoformat-markdown")
+                    }).on('change', function(field, newValue, oldValue, eOpts){
+                        var checked = (field.getValue()==='checked');
+                        Common.localStorage.setBool(me.appPrefix + "settings-autoformat-markdown", checked);
+                        Common.Utils.InternalSettings.set(me.appPrefix + "settings-autoformat-markdown", checked);
+                        me.api.asc_SetAutoCorrectMarkdown(checked);
+                    });
+                }
+
                 // AutoCorrect
                 if (this.api)
                     _exciptionsLangs = this.api.asc_GetAutoCorrectSettings().get_FirstLetterExceptionManager().get_DefaultLangs() || [];
@@ -1156,6 +1170,7 @@ define([
         textHyphens: 'Hyphens (--) with dash (—)',
         textBulleted: 'Automatic bulleted lists',
         textNumbered: 'Automatic numbered lists',
+        textMarkdown: 'Markdown formatting ("# " for headings, "*bold*" for bold text)',
         textApplyAsWork: 'Apply as you work',
         textNewRowCol: 'Include new rows and columns in table',
         textAutoCorrect: 'AutoCorrect',
